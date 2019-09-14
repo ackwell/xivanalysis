@@ -17,9 +17,8 @@ export interface Statistic {
 
 export class Statistics extends Module {
 	static handle = 'statistics'
-	// tslint:disable-next-line:variable-name
 	static title = t('core.statistics.title')`Statistics`
-	static displayOrder = DISPLAY_ORDER.STATISTICS
+	static displayOrder = DISPLAY_ORDER.STATISTICS - 100
 	static displayMode = DISPLAY_MODE.RAW
 
 	private statistics: Statistic[] = []

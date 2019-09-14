@@ -2,12 +2,14 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import math from 'mathjsCustom'
 import React from 'react'
+import {Bar as BarChart} from 'react-chartjs-2'
 
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Group, Item} from './Timeline'
 import {SimpleStatistic} from './Statistics'
+// import {Modal} from 'semantic-ui-react'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500
@@ -22,6 +24,19 @@ const DEBUG_LOG_SAVED_GCDS = false && process.env.NODE_ENV !== 'production'
 //    which is animation delay that happen between casts, this means that if you have a spell with a cast time that is equal to or
 //    greater than the recast time you will end up taking longer between casts than the (re)cast time. The delay is around 100 ms at 100+ fps
 
+// class GCDStatistic extends SimpleStatistic {
+// 	Content = () => {
+// 		const Content = super.Content
+// 		// console.log(super.Content())
+// 		// return 'hi'
+// 		return (
+// 			<Modal
+// 				trigger={<Content/>}
+// 			/>
+// 		)
+// 	}
+// }
+
 export default class GlobalCooldown extends Module {
 	static handle = 'gcd'
 	static dependencies = [
@@ -33,6 +48,7 @@ export default class GlobalCooldown extends Module {
 		'statistics',
 		'timeline',
 	]
+	static displayOrder = -100
 
 	static title = t('core.gcd.title')`Global Cooldown`
 
@@ -146,7 +162,68 @@ export default class GlobalCooldown extends Module {
 		}))
 	}
 
-	//saveGcd(event, isInstant) {
+	output() {
+		const Foo = this._generateHistogram()
+		return <Foo/>
+	}
+	_generateHistogram() {
+		const bucketWidth = 10
+		const totalBuckets = 100
+
+		const buckets = this.gcds.reduce((counts, {normalizedLength}) => {
+			const key = Math.floor(normalizedLength / bucketWidth)
+			const current = counts.get(key) || 0
+			return counts.set(key, current + 1)
+		}, new Map())
+
+		const centre = Math.floor(this.getEstimate(false) / bucketWidth)
+		const startOffset = totalBuckets / 2
+		const start = centre - startOffset
+
+		const dataset = Array.from(Array(totalBuckets), (_, index) => {
+			const length = start + index
+			return {
+				label: (length / 100).toFixed(2),
+				count: buckets.get(length) || 0}
+		})
+
+		const data = {
+			labels: dataset.map(({label}) => label),
+			datasets: [{
+				label: 'Count',
+				data: dataset.map(({count}) => count),
+				backgroundColor: context => context.dataIndex === startOffset
+					? 'rgba(255, 0, 0, 0.5)'
+					: undefined,
+			}],
+		}
+
+		const options = {
+			legend: {display: false},
+			scales: {
+				xAxes: [{
+					barPercentage: 1,
+					categoryPercentage: 1,
+					ticks: {
+						maxRotation: 0,
+					},
+				}],
+				yAxes: [{
+					ticks: {
+						beginAtZero: true,
+					},
+				}],
+			},
+		}
+
+		return () => (
+			<BarChart
+				data={data}
+				options={options}
+			/>
+		)
+	}
+
 	saveGcd(gcdInfo, timestamp) {
 		if (!gcdInfo.event) {
 			return
