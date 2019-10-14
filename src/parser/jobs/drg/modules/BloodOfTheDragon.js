@@ -5,10 +5,10 @@ import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {Gauge, TimerGauge, CounterGauge} from 'parser/core/modules/Gauge'
 
 const DRAGON_MAX_DURATION_MILLIS = 30000
 const DRAGON_DEFAULT_DURATION_MILLIS = 30000
@@ -16,7 +16,9 @@ const BLOOD_EXTENSION_MILLIS = 10000
 
 const MAX_EYES = 2
 
-export default class BloodOfTheDragon extends Module {
+export default class BloodOfTheDragon extends Gauge {
+	static displayOrder = -100
+
 	static handle = 'bloodOfTheDragon'
 	static title = t('drg.blood.title')`Life of the Dragon`
 	static dependencies = [
@@ -40,6 +42,30 @@ export default class BloodOfTheDragon extends Module {
 	_eyes = 0
 	_lostEyes = 0
 
+	// new
+
+	_newEyes = this.add(new CounterGauge({
+		maximum: MAX_EYES,
+
+		chart: {label: 'eyes', color: 'red'},
+	}))
+
+	_blood = this.add(new TimerGauge({
+		maximum: DRAGON_MAX_DURATION_MILLIS,
+		onExpiration: () => {
+			this._newEyes.reset()
+		},
+		chart: {label: 'blood', color: 'blue'},
+	}))
+
+	_life = this.add(new TimerGauge({
+		maximum: DRAGON_MAX_DURATION_MILLIS,
+		onExpiration: () => {
+			this._blood.set(DRAGON_DEFAULT_DURATION_MILLIS)
+		},
+		chart: {label: 'life', color: 'green'},
+	}))
+
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.FANG_AND_CLAW.id, ACTIONS.WHEELING_THRUST.id]}, this._onExtenderCast)
@@ -52,6 +78,11 @@ export default class BloodOfTheDragon extends Module {
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('raise', {to: 'player'}, this._onRaise)
 		this.addHook('complete', this._onComplete)
+
+		// Null assumption, in case they precast. In all likelyhood, this will actually be incorrect, but there's no harm if
+		// that's the case since BotD should be the very first weave in the fight and that'll reset the duration to 30s anyway.
+		// Also, this way we don't count the first second of the fight as erroneous downtime.
+		this._blood.set(DRAGON_DEFAULT_DURATION_MILLIS)
 	}
 
 	_finishLifeWindow() {
@@ -83,6 +114,8 @@ export default class BloodOfTheDragon extends Module {
 		}
 
 		this._lastEventTime = this.parser.currentTimestamp
+
+		;(this._bloodDuration !== this._blood.remaining ? console.warn : console.log)(this.parser.formatTimestamp(this.parser.currentTimestamp), this._bloodDuration, this._blood.remaining)
 	}
 
 	_onExtenderCast() {
@@ -91,11 +124,18 @@ export default class BloodOfTheDragon extends Module {
 			// If we're in regular Blood, increase the duration
 			this._bloodDuration = Math.min(this._bloodDuration + BLOOD_EXTENSION_MILLIS, DRAGON_MAX_DURATION_MILLIS)
 		}
+
+		// If we're in regular Blood, increase the duration
+		if (this._life.expired && !this._blood.expired) {
+			this._blood.extend(BLOOD_EXTENSION_MILLIS)
+		}
 	}
 
 	_onBloodCast() {
 		this._updateGauge()
 		this._bloodDuration = DRAGON_DEFAULT_DURATION_MILLIS
+
+		this._blood.set(DRAGON_DEFAULT_DURATION_MILLIS)
 	}
 
 	_onMirageDiveCast() {
@@ -107,6 +147,10 @@ export default class BloodOfTheDragon extends Module {
 				this._lostEyes += this._eyes - MAX_EYES
 				this._eyes = MAX_EYES
 			}
+		}
+
+		if (!this._blood.expired) {
+			this._newEyes.modify(1)
 		}
 	}
 
@@ -122,6 +166,13 @@ export default class BloodOfTheDragon extends Module {
 				stardivers: [],
 			}
 			this._eyes = 0
+		}
+
+		if (this._newEyes.value >= MAX_EYES) {
+			console.log('lotd')
+			this._newEyes.reset()
+			this._blood.pause()
+			this._life.set(DRAGON_DEFAULT_DURATION_MILLIS)
 		}
 	}
 
@@ -213,24 +264,24 @@ export default class BloodOfTheDragon extends Module {
 		}))
 	}
 
-	output() {
-		if (this._lifeWindows.history.length > 0) {
-			return <Fragment>
-				<Trans id="drg.blood.windows.preface">
-					Each of the bullets below represents a Life of the Dragon window, indicating when it started, how long it lasted, and how many window-restricted OGCDs it contained. Ideally, each window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast.
-				</Trans>
-				<ul>
-					{this._lifeWindows.history.map(window => <li key={window.start}>
-						<strong>{this.parser.formatTimestamp(window.start)}</strong>:&nbsp;
-						<Trans id="drg.blood.windows.hits">
-							{this.parser.formatDuration(window.duration)} long, <Plural value={window.nastronds.length} one="# Nastrond" other="# Nastronds"/>, <Plural value={window.stardivers.length} one="# Stardiver" other="# Stardivers"/>
-						</Trans>
-					</li>)}
-				</ul>
-			</Fragment>
-		}
+	// output() {
+	// 	if (this._lifeWindows.history.length > 0) {
+	// 		return <Fragment>
+	// 			<Trans id="drg.blood.windows.preface">
+	// 				Each of the bullets below represents a Life of the Dragon window, indicating when it started, how long it lasted, and how many window-restricted OGCDs it contained. Ideally, each window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast.
+	// 			</Trans>
+	// 			<ul>
+	// 				{this._lifeWindows.history.map(window => <li key={window.start}>
+	// 					<strong>{this.parser.formatTimestamp(window.start)}</strong>:&nbsp;
+	// 					<Trans id="drg.blood.windows.hits">
+	// 						{this.parser.formatDuration(window.duration)} long, <Plural value={window.nastronds.length} one="# Nastrond" other="# Nastronds"/>, <Plural value={window.stardivers.length} one="# Stardiver" other="# Stardivers"/>
+	// 					</Trans>
+	// 				</li>)}
+	// 			</ul>
+	// 		</Fragment>
+	// 	}
 
-		// This should really never happen but if they didn't go into LotD once, we shouldn't bother showing the section
-		return false
-	}
+	// 	// This should really never happen but if they didn't go into LotD once, we shouldn't bother showing the section
+	// 	return false
+	// }
 }
