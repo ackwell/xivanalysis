@@ -2,10 +2,11 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import math from 'mathjsCustom'
 import React from 'react'
+import {Bar as BarChart} from 'react-chartjs-2'
 
 import Module from 'parser/core/Module'
-import {SimpleStatistic} from './Statistics'
 import {ActionItem, ContainerRow} from './Timeline'
+import {SimpleStatistic} from './Statistics'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500
@@ -32,6 +33,7 @@ export default class GlobalCooldown extends Module {
 		'statistics',
 		'timeline',
 	]
+	static displayOrder = -Infinity
 
 	static title = t('core.gcd.title')`Global Cooldown`
 
@@ -146,6 +148,64 @@ export default class GlobalCooldown extends Module {
 				</Trans>
 			),
 		}))
+	}
+
+	output() {
+		const bucketWidth = 10
+		const totalBuckets = 100
+
+		const buckets = this.gcds.reduce((counts, {normalizedLength}) => {
+			const key = Math.floor(normalizedLength / bucketWidth)
+			const current = counts.get(key) || 0
+			return counts.set(key, current + 1)
+		}, new Map())
+
+		const centre = Math.floor(this.getEstimate(false) / bucketWidth)
+		const startOffset = totalBuckets / 2
+		const start = centre - startOffset
+
+		const dataset = Array.from(Array(totalBuckets), (_, index) => {
+			const length = start + index
+			return {
+				label: (length / 100).toFixed(2),
+				count: buckets.get(length) || 0}
+		})
+
+		const data = {
+			labels: dataset.map(({label}) => label),
+			datasets: [{
+				label: 'Count',
+				data: dataset.map(({count}) => count),
+				backgroundColor: context => context.dataIndex === startOffset
+					? 'rgba(255, 0, 0, 0.5)'
+					: undefined,
+			}],
+		}
+
+		const options = {
+			legend: {display: false},
+			scales: {
+				xAxes: [{
+					barPercentage: 1,
+					categoryPercentage: 1,
+					ticks: {
+						maxRotation: 0,
+					},
+				}],
+				yAxes: [{
+					ticks: {
+						beginAtZero: true,
+					},
+				}],
+			},
+		}
+
+		return (
+			<BarChart
+				data={data}
+				options={options}
+			/>
+		)
 	}
 
 	//saveGcd(event, isInstant) {
