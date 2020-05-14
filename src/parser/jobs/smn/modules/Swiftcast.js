@@ -12,7 +12,7 @@ const MISSED_SEVERITIES = {
 export default class Swiftcast extends SwiftcastModule {
 	static handle = 'swiftcast'
 
-	@dependency 'dwt'
+	@dependency FAKE1
 
 	severityTiers = MISSED_SEVERITIES
 

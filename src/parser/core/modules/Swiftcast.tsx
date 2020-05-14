@@ -7,6 +7,7 @@ import ACTIONS, {Action} from 'data/ACTIONS'
 import STATUSES, {Status} from 'data/STATUSES'
 import {BuffWindowExpectedGCDs, BuffWindowModule, BuffWindowState} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
+import {FAKEBASE} from 'parser/core/modules/FAKE'
 
 interface SeverityTiers {
 	[key: number]: number
@@ -77,8 +78,8 @@ export abstract class SwiftcastModule extends BuffWindowModule {
 		if ( this.buffStatus.duration ) {
 			// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
 			const fightTimeRemaining = this.parser.fight.end_time - buffWindow.start
-			const gcdEstimate = this.globalCooldown.getEstimate()
-			return ( fightTimeRemaining > gcdEstimate ) ? 0 : 1
+			// const gcdEstimate = this.globalCooldown.getEstimate()
+			// return ( fightTimeRemaining > gcdEstimate ) ? 0 : 1
 		}
 		return 0
 	}

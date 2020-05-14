@@ -27,11 +27,14 @@ export function dependency(target: Module, prop: string) {
 	// This totally-redundant line is a workaround for an issue in FF ~73 which causes the
 	// assignment in the conditional below to completely kludge the entire array regardless
 	// of it's contents if this isn't here.
-	const constructorDependencies = constructor.dependencies
+	// const constructorDependencies = constructor.dependencies
+	// debugger
 
 	// Make sure we're not modifying every single module
 	if (!constructor.hasOwnProperty('dependencies')) {
-		constructor.dependencies = [...constructorDependencies]
+		if (constructor.handle === 'swiftcast') console.log(1, constructor.dependencies)
+		constructor.dependencies = [...constructor.dependencies]
+		if (constructor.handle === 'swiftcast') console.log(2, constructor.dependencies)
 	}
 
 	// If the dep is Object, it's _probably_ from a JS file. Fall back to simple handling
