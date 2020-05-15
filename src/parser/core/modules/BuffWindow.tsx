@@ -47,9 +47,5 @@ export interface BuffWindowExpectedGCDs {
 export abstract class BuffWindowModule extends Module {
 	static handle: string = 'buffwindow'
 
-	// @dependency private data!: Data
-	// @dependency private suggestions!: Suggestions
-	// @dependency private timeline!: Timeline
 	@dependency private globalCooldown!: GlobalCooldown
-
 }
