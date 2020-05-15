@@ -1,5 +1,0 @@
-export enum DISPLAY_ORDER {
-	DELIRIUM = 1,
-	BLOOD_WEAPON = 2,
-	RESOURCES,
-}
