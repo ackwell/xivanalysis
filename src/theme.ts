@@ -8,7 +8,7 @@ function extractNumber(value: string): number {
 	return parseInt(stripped, 10)
 }
 
-function extractColor(value: string): Color {
+function extractColor(value: string) {
 	if (process.env.NODE_ENV === 'test') { return Color('black') }
 	return Color(value)
 }

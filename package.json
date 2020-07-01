@@ -102,6 +102,7 @@
     "@teamsupercell/typings-for-css-modules-loader": "^2.0.0",
     "@types/chart.js": "^2.7.37",
     "@types/classnames": "^2.2.6",
+    "@types/color": "^3.0.1",
     "@types/d3-scale": "^2.2.0",
     "@types/d3-time": "^1.0.10",
     "@types/d3-time-format": "^2.1.1",
