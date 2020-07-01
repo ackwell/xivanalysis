@@ -1,0 +1,11 @@
+{
+	"mode": "modules",
+	"json": "DOCTEST.ignore.json",
+	"ignoreCompilerErrors": true,
+	"includeDeclarations": true,
+	"excludeExternals": true,
+	"externalPattern": ["**/__tests__/**"],
+	"excludeNotExported": true,
+	"excludePrivate": true,
+	"stripInternal": true
+}
