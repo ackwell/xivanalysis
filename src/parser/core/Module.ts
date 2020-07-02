@@ -145,6 +145,7 @@ export default class Module {
 	 * Because JS construct order is jank and nobody can fix it. Don't call this.
 	 * Please. I'm begging you.
 	 * @todo refactor `init` to public so this shit isn't needed.
+	 * @internal
 	 */
 	doTheMagicInitDance() {
 		this.init()
@@ -161,6 +162,7 @@ export default class Module {
 	 * This method is called when an error occurs, either when running
 	 * event hooks or calling {@link Module#output} in this module or
 	 * a module that depends on this module.
+	 * @internal
 	 * @param source Either 'event' or 'output'
 	 * @param error The error that occurred
 	 * @param event The event that was being processed when the error occurred, if source is 'event'
@@ -173,6 +175,7 @@ export default class Module {
 	/**
 	 * Deprecated pass-through for `addEventHook`, maintained for backwards compatibility.
 	 * @deprecated
+	 * @internal
 	 */
 	// tslint:disable-next-line:member-ordering
 	protected readonly addHook = this.addEventHook
@@ -268,6 +271,7 @@ export default class Module {
 	/**
 	 * Deprecated pass-through for `removeEventHook`, maintained for backwards compatibility.
 	 * @deprecated
+	 * @internal
 	 */
 	// tslint:disable-next-line:member-ordering
 	protected readonly removeHook = this.removeEventHook
