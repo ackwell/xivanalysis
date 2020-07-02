@@ -1,0 +1,41 @@
+{%- capture includesApiWorkspace %}
+{% for _ in (1..1) %}
+
+{% assign error = nil %}
+
+<!-- Grab the requested path, fail out if not found -->
+{% assign modulePath = include.path %}
+{% unless modulePath %}
+	{% assign error = "`path` parameter not passed." %}
+	{% break %}
+{% endunless %}
+
+<!-- Find all top-level modules matching the requested module path -->
+{% capture childFilter %}child.name contains '{{ modulePath }}'{% endcapture %}
+{% assign modules = site.data.api.children | where_exp:"child", childFilter %}
+
+{% assign module = nil %}
+{% if modules.size == 1 %}
+	<!-- Only one module found, document it directly -->
+	{% assign module = modules[0] %}
+{% else %}
+	<!-- More than one - look for the index, and only document what was found in it. -->
+	{% capture indexFilter %}module.name contains '{{ modulePath }}/index'{% endcapture %}
+	{% assign module = modules | where_exp:"module", indexFilter | first %}
+{% endif %}
+
+<!-- No module found, fail out. -->
+{% unless module %}
+	{% capture error %}No module found matching path {{ modulePath }}{% endcapture %}
+	{% break %}
+{% endunless %}
+
+{% endfor %}
+{% endcapture %}{% assign includesApiWorkspace = "" -%}
+{%- if module -%}
+	<!-- TODO: render module -->
+	{{ module | jsonify }}
+{%- else -%}
+	An error occured.
+	{% if error %}{{ error }}{% endif %}
+{%- endif -%}

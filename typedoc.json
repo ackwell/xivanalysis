@@ -1,6 +1,6 @@
 {
 	"mode": "modules",
-	"json": "DOCTEST.ignore.json",
+	"json": "docs/_data/api.json",
 	"ignoreCompilerErrors": true,
 	"includeDeclarations": true,
 	"excludeExternals": true,

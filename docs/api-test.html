@@ -1,0 +1,17 @@
+---
+---
+
+{%- assign modulePath = "parser/core/Module" -%}
+{%- assign modulePath = "fdsfdsfsdfs" -%}
+{%- assign modulePath = "parser/core/modules/Timeline" -%}
+
+{%- include api.html path=modulePath -%}
+
+{% comment %}
+input is a module path
+- if the module path resolves to a single module, doc
+- if the module path reasolves to multiple modules, check for module/index
+	- not found, fail out
+	- found, use index as the "module"
+- _follow exported references_ - regardless of index-ness - i guess?
+{% endcomment %}
