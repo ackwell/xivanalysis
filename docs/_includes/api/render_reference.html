@@ -2,19 +2,24 @@
 References point to some other value, potentially renaming it.
 Search the context to see if we can find it.
 {% endcomment %}
-{%- assign ref = include.item -%}
 {%- assign context = include.context | default: include.modules -%}
 
 {% comment %}
 Search for a value matching the reference. If none is found, check through the context for
 items with children and recurse. This is pretty safe, as typedoc IDs are globally unique.
+
+TODO: NEED TO PASS THE REFERENCE'S NAME IN WHEN RENDERING VALUE, AS THE REFERENCE'S NAME WILL HAVE PRECEDENCE. (include.item.name)
 {% endcomment %}
-{%- assign value = context | where: "id", ref.target | first -%}
+{%- assign value = context | where: "id", include.item.target | first -%}
 {%- if value -%}
-	<strong>REFERENCE:</strong> {{ ref.name }} --> {{ value | jsonify }}<br>
+	{% include api/render.html item=value modules=include.modules %}
 {%- else -%}
 	{%- for item in context -%}
 		{%- unless item.children %}{% continue %}{% endunless -%}
-		{%- include api/render_reference.html item=ref modules=include.modules context=item.children -%}
+		{%- include api/render_reference.html
+			item=include.item
+			modules=include.modules
+			context=item.children
+		-%}
 	{%- endfor -%}
 {%- endif -%}
