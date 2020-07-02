@@ -1,4 +1,6 @@
-{%- include api/render_{{ include.item.kindString | downcase }}.html
-	item=include.item
-	modules=include.modules
--%}
+<div class="api-item">
+	{%- include api/render_{{ include.item.kindString | downcase }}.html
+		item=include.item
+		modules=include.modules
+	-%}
+</div>

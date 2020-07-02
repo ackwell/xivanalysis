@@ -36,7 +36,7 @@
 
 {% endfor %}{% endcapture %}{% assign includesApiWorkspace = "" -%}
 {%- if module -%}
-	{% include api/render_module.html item=module modules=modules %}
+	{% include api/render.html item=module modules=modules %}
 {%- else -%}
 	{% include error.html message=error %}
 {%- endif -%}
