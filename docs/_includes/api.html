@@ -32,7 +32,7 @@
 
 <!-- No module found, fail out. -->
 {% unless module %}
-	{% capture error %}No module found matching path {{ modulePath }}{% endcapture %}
+	{% capture error %}No module found matching path "{{ modulePath }}"{% endcapture %}
 	{% break %}
 {% endunless %}
 
@@ -42,6 +42,5 @@
 	<!-- TODO: render module -->
 	{{ module | jsonify }}
 {%- else -%}
-	An error occured.
-	{% if error %}{{ error }}{% endif %}
+	{% include error.html message=error %}
 {%- endif -%}
