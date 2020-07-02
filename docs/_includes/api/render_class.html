@@ -1,1 +1,4 @@
 CLASS {{ include.item.name }}
+{%- for child in include.item.children -%}
+	{%- include api/render.html item=child modules=include.modules -%}
+{%- endfor -%}
