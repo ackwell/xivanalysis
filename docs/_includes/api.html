@@ -3,6 +3,12 @@
 
 {% assign error = nil %}
 
+<!-- Make sure the api data has been generated -->
+{% unless site.data.api %}
+	{% assign error = "Data missing. Make sure to generate the API JSON before building the documentation." %}
+	{% break %}
+{% endunless %}
+
 <!-- Grab the requested path, fail out if not found -->
 {% assign modulePath = include.path %}
 {% unless modulePath %}
