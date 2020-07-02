@@ -1,0 +1,6 @@
+{% comment %}
+References point to some other value, potentially renaming it.
+Search the context to see if we can find it.
+{% endcomment %}
+{%- assign ref = include.item -%}
+<strong>REFERENCE:</strong> {{ ref.name }} --> {{ ref.target }}<br>

@@ -1,0 +1,2 @@
+{%- assign item = include.item -%}
+{%- include api/render_{{ item.kindString | downcase }}.html item=item modules=include.modules -%}

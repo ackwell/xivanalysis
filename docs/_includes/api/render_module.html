@@ -1,0 +1,6 @@
+{% comment %}
+Modules are only really the collection of the values within them. Render that out.
+{% endcomment %}
+{%- for child in include.item.children -%}
+	{%- include api/render.html item=child modules=include.modules -%}
+{%- endfor -%}

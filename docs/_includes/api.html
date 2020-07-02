@@ -1,6 +1,4 @@
-{%- capture includesApiWorkspace %}
-{% for _ in (1..1) %}
-
+{%- capture includesApiWorkspace %}{% for _ in (1..1) %}
 {% assign error = nil %}
 
 <!-- Make sure the api data has been generated -->
@@ -36,11 +34,9 @@
 	{% break %}
 {% endunless %}
 
-{% endfor %}
-{% endcapture %}{% assign includesApiWorkspace = "" -%}
+{% endfor %}{% endcapture %}{% assign includesApiWorkspace = "" -%}
 {%- if module -%}
-	<!-- TODO: render module -->
-	{{ module | jsonify }}
+	{% include api/render_module.html item=module modules=modules %}
 {%- else -%}
 	{% include error.html message=error %}
 {%- endif -%}
