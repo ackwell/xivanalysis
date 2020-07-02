@@ -2,6 +2,9 @@
 	border: 1px solid grey;
 	padding: 5px;
 
+	// This is just debugging for now
+	background: rgba(255, 255, 255, 0.08);
+
 	& + .api-item {
 		margin-top: 5px;
 	}

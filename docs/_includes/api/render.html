@@ -1,18 +1,16 @@
-{%- capture rendered -%}
-	{%- include api/render_{{ include.item.kindString | downcase }}.html
+{%- assign item = include.item -%}
+{%- assign kind = item.kindString | downcase -%}
+
+{%- if kind == "reference" -%}
+	{%- include api/render_reference.html
 		item=include.item
 		modules=include.modules
 	-%}
-{%- endcapture -%}
-
-{%- assign kind = include.item.kindString | downcase -%}
-
-{%- if kind != "reference" -%}
+{%- else -%}
 	<div class="api-item">
-{%- endif -%}
-
-{{ rendered }}
-
-{%- if kind != "reference" -%}
+		{%- include api/render_{{ kind }}.html
+			item=include.item
+			modules=include.modules
+		-%}
 	</div>
 {%- endif -%}

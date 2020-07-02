@@ -1,4 +1,12 @@
-CLASS {{ include.item.name }}
-{%- for child in include.item.children -%}
+{% assign item = include.item %}
+
+CLASS {{ item.name }}
+
+{% if item.comment %}
+	<p>{{ item.comment.shortText }}</p>
+	<p>{{ item.comment.text }}</p>
+{% endif %}
+
+{%- for child in item.children -%}
 	{%- include api/render.html item=child modules=include.modules -%}
 {%- endfor -%}

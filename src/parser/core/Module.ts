@@ -82,6 +82,7 @@ interface DebugFnOpts {
 }
 type DebugFn = (opts: DebugFnOpts) => void
 
+/** class docblock */
 export default class Module {
 	static dependencies: Array<string | MappedDependency> = []
 	static displayOrder: number = DISPLAY_ORDER.DEFAULT
