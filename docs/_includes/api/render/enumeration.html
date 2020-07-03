@@ -1,1 +1,16 @@
-ENUMERATION {{ include.item.name }}
+{%- assign enum = include.item -%}
+
+ENUMERATION {{ enum.name }}
+
+{%- if enum.children.size > 0 -%}
+	<ul>
+		{%- for member in enum.children -%}
+			<li>
+				{{ member.name }}
+				{%- if member.comment -%}
+					&nbsp;-&nbsp;{{ member.comment.shortText }} {{ member.comment.text }}
+				{%- endif -%}
+			</li>
+		{%- endfor -%}
+	</ul>
+{%- endif -%}
