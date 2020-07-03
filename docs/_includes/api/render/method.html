@@ -1,1 +1,22 @@
+{% assign method = include.item %}
+
 METHOD {{ include.item.name }}
+
+{% comment %}
+do we want to show inherited stuff at all?
+minial view?
+{% endcomment %}
+
+<ul>
+	{% for signature in method.signatures %}
+		<li>
+			{{ signature.name }}(
+
+			{% for parameter in signature.parameters %}
+				{{ parameter.name }}: {% include api/partial/type.html type=parameter.type %}
+			{% endfor %}
+
+			): {% include api/partial/type.html type=signature.type %}
+		</li>
+	{% endfor %}
+</ul>

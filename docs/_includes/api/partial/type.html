@@ -1,0 +1,7 @@
+{%- assign type = include.type -%}
+{%- case type.type -%}
+	{%- when "array" -%}
+		{% include api/partial/type.html type=type.elementType %}[]
+	{%- else -%}
+		{{ type.name }}
+{%- endcase -%}
