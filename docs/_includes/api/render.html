@@ -2,13 +2,13 @@
 {%- assign kind = item.kindString | downcase -%}
 
 {%- if kind == "reference" -%}
-	{%- include api/render_reference.html
+	{%- include api/render/reference.html
 		item=include.item
 		modules=include.modules
 	-%}
 {%- else -%}
 	<div class="api-item">
-		{%- include api/render_{{ kind }}.html
+		{%- include api/render/{{ kind }}.html
 			item=include.item
 			modules=include.modules
 		-%}

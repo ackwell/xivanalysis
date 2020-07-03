@@ -55,9 +55,12 @@ export function dependency(target: Module, prop: string) {
 
 /**
  * DO NOT USE OR YOU WILL BE FIRED
+ *
  * Totally spit in the face of the entire dependency system by forcing it
  * to execute the decorated module before the module passed as an argument.
  * If you have to think whether you need this or not, you don't need it.
+ *
+ * @internal
  */
 export const executeBeforeDoNotUseOrYouWillBeFired = (target: typeof Module) =>
 	(source: typeof Module) => {
