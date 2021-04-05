@@ -1,15 +1,15 @@
 import {ChartDataSets} from 'chart.js'
-import {Gauge} from './Gauge'
+import {Analyser} from 'parser/core/Analyser'
 
 export interface AbstractGaugeOptions {
 	/** Reference to the parser. Required if not adding the gauge to the core gauge module. */
-	analyser?: Gauge
+	analyser?: Analyser
 }
 
 export abstract class AbstractGauge {
-	private _analyser?: Gauge // TODO: Analyser?
+	private _analyser?: Analyser
 
-	/** TODO */
+	/** Parent analyser instance. */
 	protected get analyser() {
 		if (!this._analyser) {
 			throw new Error('No analyser found. Ensure this gauge is being passed to the core gauge module, or initialised with a reference to an analyser.')
@@ -23,7 +23,7 @@ export abstract class AbstractGauge {
 	}
 
 	/** Set the parent analyser instance to be used for parser interaction. */
-	setAnalyser(analyser: Gauge) {
+	setAnalyser(analyser: Analyser) {
 		this._analyser = analyser
 	}
 

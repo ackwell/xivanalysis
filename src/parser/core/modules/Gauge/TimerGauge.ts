@@ -1,6 +1,6 @@
 import {ChartDataSets} from 'chart.js'
 import Color from 'color'
-import Module from 'parser/core/Module'
+import {TimestampHook} from 'parser/core/Dispatcher'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
 interface State {
@@ -36,7 +36,7 @@ export class TimerGauge extends AbstractGauge {
 	private readonly expirationCallback?: () => void
 	private readonly chartOptions?: TimerChartOptions
 
-	private hook?: ReturnType<Module['addTimestampHook']>
+	private hook?: TimestampHook
 	private history: State[] = []
 
 	/** The most recent state  */

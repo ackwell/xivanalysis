@@ -49,8 +49,8 @@ const INFURIATE_CDR = 5
 export class Gauge extends CoreGauge {
 	static title = t('war.gauge.title')`Beast Gauge`
 
-	@dependency private combatants!: Combatants
-	@dependency private cooldowns!: Cooldowns
+	// @dependency private combatants!: Combatants
+	// @dependency private cooldowns!: Cooldowns
 	@dependency private suggestions!: Suggestions
 
 	private beastGauge = this.add(new CounterGauge({
