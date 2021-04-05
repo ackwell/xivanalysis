@@ -1,30 +1,30 @@
 import {ChartDataSets} from 'chart.js'
-import Parser from 'parser/core/Parser'
+import {Gauge} from './Gauge'
 
 export interface AbstractGaugeOptions {
 	/** Reference to the parser. Required if not adding the gauge to the core gauge module. */
-	parser?: Parser
+	analyser?: Gauge
 }
 
 export abstract class AbstractGauge {
-	private _parser?: Parser
+	private _analyser?: Gauge // TODO: Analyser?
 
-	/** The main parser instance. */
-	protected get parser() {
-		if (!this._parser) {
-			throw new Error('No parser found. Ensure this gauge is being passed to the core gauge module, or initialised with a reference to the parser.')
+	/** TODO */
+	protected get analyser() {
+		if (!this._analyser) {
+			throw new Error('No analyser found. Ensure this gauge is being passed to the core gauge module, or initialised with a reference to an analyser.')
 		}
 
-		return this._parser
+		return this._analyser
 	}
 
 	constructor(opts: AbstractGaugeOptions) {
-		this._parser = opts.parser
+		this._analyser = opts.analyser
 	}
 
-	/** Set the function used to retrieve the current timestamp. */
-	setParser(parser: Parser) {
-		this._parser = parser
+	/** Set the parent analyser instance to be used for parser interaction. */
+	setAnalyser(analyser: Gauge) {
+		this._analyser = analyser
 	}
 
 	/** Reset any values stored within the gauge to their initial state. */

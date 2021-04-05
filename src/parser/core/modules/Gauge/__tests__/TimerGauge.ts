@@ -1,32 +1,27 @@
-import {TimerGauge} from 'parser/core/modules/Gauge'
 import Parser from 'parser/core/Parser'
+import {Gauge} from '../Gauge'
+import {TimerGauge} from '../TimerGauge'
 
 jest.mock('parser/core/Parser')
 const MockedParser = Parser as jest.Mock<Parser>
+
+jest.mock('../Gauge')
+const MockedGauge = Gauge as unknown as jest.Mock<Gauge>
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 describe('TimerGauge', () => {
 	let currentTimestamp: number
-	const timestampHooks: Array<{timestamp: number}> = []
-	let parser: Parser
+	let timestampHooks: Array<{timestamp: number}> = []
 	let addTimestampHook: jest.Mock
 	let removeTimestampHook: jest.Mock
+	let analyser: Gauge
 	let gauge: TimerGauge
 
 	beforeEach(() => {
 		currentTimestamp = 100
-		parser = new MockedParser()
-		Object.defineProperty(parser, 'currentTimestamp', {
-			get: () => currentTimestamp,
-		})
-		Object.defineProperty(parser, 'pull', {
-			get: () => ({timestamp: 0, duration: 1000}),
-		})
-		Object.defineProperty(parser, 'eventTimeOffset', {
-			get: () => 0,
-		})
 
+		timestampHooks = []
 		addTimestampHook = jest.fn().mockImplementation(() => {
 			const hook = {timestamp: currentTimestamp}
 			timestampHooks.push(hook)
@@ -34,13 +29,25 @@ describe('TimerGauge', () => {
 		})
 		removeTimestampHook = jest.fn()
 
+		const parser = new MockedParser()
+		Object.defineProperties(parser, {
+			currentTimestamp: {get: () => currentTimestamp},
+			pull: {value: {timestamp: 0, duration: 1000}},
+			eventTimeOffset: {value: 0},
+		})
+
+		analyser = new MockedGauge()
+		Object.defineProperties(analyser, {
+			parser: {value: parser},
+			addTimestampHook: {value: addTimestampHook},
+			removeTimestampHook: {value: removeTimestampHook},
+		})
+
 		gauge = new TimerGauge({
 			maximum: 100,
-			parser,
+			analyser,
 			chart: {label: 'test'},
 		})
-		gauge.setAddTimestampHook(addTimestampHook)
-		gauge.setRemoveTimestampHook(removeTimestampHook)
 	})
 
 	it('defaults to no duration remaining', () => {

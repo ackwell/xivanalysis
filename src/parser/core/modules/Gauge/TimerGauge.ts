@@ -3,14 +3,6 @@ import Color from 'color'
 import Module from 'parser/core/Module'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
-function expectExist<T>(value?: T) {
-	if (!value) {
-		throw new Error('Missing something required. Check the stack trace.')
-	}
-
-	return value
-}
-
 interface State {
 	timestamp: number
 	remaining: number
@@ -47,13 +39,6 @@ export class TimerGauge extends AbstractGauge {
 	private hook?: ReturnType<Module['addTimestampHook']>
 	private history: State[] = []
 
-	// TODO: Work out how to remove this reliance on having it passed down
-	private _addTimestampHook?: Module['addTimestampHook']
-	private get addTimestampHook() { return expectExist(this._addTimestampHook) }
-
-	private _removeTimestampHook?: Module['removeTimestampHook']
-	private get removeTimestampHook() { return expectExist(this._removeTimestampHook) }
-
 	/** The most recent state  */
 	private get lastKnownState() {
 		const {length} = this.history
@@ -75,7 +60,7 @@ export class TimerGauge extends AbstractGauge {
 			return this.lastKnownState.remaining
 		}
 
-		const delta = this.parser.currentTimestamp - this.lastKnownState.timestamp
+		const delta = this.analyser['parser'].currentTimestamp - this.lastKnownState.timestamp
 		return Math.max(this.minimum, this.lastKnownState.remaining - delta)
 	}
 
@@ -148,7 +133,7 @@ export class TimerGauge extends AbstractGauge {
 
 	/** Set the time remaining on the timer to the given duration. Value will be bounded by provided maximum. */
 	set(duration: number, paused: boolean = false) {
-		const timestamp = this.parser.currentTimestamp
+		const timestamp = this.analyser['parser'].currentTimestamp
 		const remaining = Math.max(this.minimum, Math.min(duration, this.maximum))
 
 		// Push a new state onto the history
@@ -160,12 +145,12 @@ export class TimerGauge extends AbstractGauge {
 
 		// Remove any existing hook
 		if (this.hook) {
-			this.removeTimestampHook(this.hook)
+			this.analyser['removeTimestampHook'](this.hook)
 		}
 
 		// If we've not yet expired, and we're not paused, set up a hook to wait for that
 		if (!paused && remaining > 0) {
-			this.hook = this.addTimestampHook(timestamp + remaining, this.onExpiration)
+			this.hook = this.analyser['addTimestampHook'](timestamp + remaining, this.onExpiration)
 		}
 	}
 
@@ -183,8 +168,8 @@ export class TimerGauge extends AbstractGauge {
 		}
 
 		// Translate state history into a dataset that makes sense for the chart
-		const startTime = this.parser.eventTimeOffset
-		const endTime = startTime + this.parser.pull.duration
+		const startTime = this.analyser['parser'].eventTimeOffset
+		const endTime = startTime + this.analyser['parser'].pull.duration
 		const data: Array<{t: number, y?: number}> = []
 		this.history.forEach(entry => {
 			const relativeTimestamp = entry.timestamp - startTime
@@ -243,14 +228,5 @@ export class TimerGauge extends AbstractGauge {
 		}
 
 		return dataSet
-	}
-
-	// Junk I wish I didn't need
-	setAddTimestampHook(value: Module['addTimestampHook']) {
-		this._addTimestampHook = value
-	}
-
-	setRemoveTimestampHook(value: Module['removeTimestampHook']) {
-		this._removeTimestampHook = value
 	}
 }
