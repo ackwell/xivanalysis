@@ -1,3 +1,4 @@
+import {VanillaExtractPlugin} from '@vanilla-extract/webpack-plugin'
 import {CleanWebpackPlugin} from 'clean-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
@@ -92,6 +93,10 @@ export default (env: Environment, {
 	},
 
 	plugins: [
+		new VanillaExtractPlugin({
+			identifiers: mode === 'development' ? 'debug' : 'short',
+		}),
+
 		new webpack.DefinePlugin({
 			'process.env': {
 				NODE_ENV: JSON.stringify(process.env.NODE_ENV ?? 'development'),
@@ -145,6 +150,7 @@ export default (env: Environment, {
 			// CSS
 			{
 				test: /\.css$/,
+				exclude: /\.vanilla\.css$/i,
 				use: [
 					mode !== 'development'
 						? {loader: MiniCssExtractPlugin.loader, options: {esModule: true}}
@@ -172,6 +178,18 @@ export default (env: Environment, {
 						},
 					},
 					{loader: 'postcss-loader'},
+				],
+			},
+			{
+				test: /\.vanilla\.css$/i,
+				use: [
+					mode !== 'development'
+						? {loader: MiniCssExtractPlugin.loader, options: {esModule: true}}
+						: {loader: 'style-loader'},
+					{
+						loader: 'css-loader',
+						options: {url: false},
+					},
 				],
 			},
 			// Lingui message files
