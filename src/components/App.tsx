@@ -1,4 +1,3 @@
-import {Container} from 'akkd'
 import classnames from 'classnames'
 import _ from 'lodash'
 import {useContext, useEffect, useState} from 'react'
@@ -6,6 +5,7 @@ import {Link, Route, useLocation, Routes, Navigate} from 'react-router-dom'
 import {reportSources} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
 import {StoreContext} from 'store'
+import {container} from './App.css'
 import styles from './App.module.css'
 import {ErrorBoundary} from './ErrorBoundary'
 import {GlobalSidebar} from './GlobalSidebar'
@@ -13,7 +13,7 @@ import {Home} from './Home'
 import {ReportRedirect} from './Home/ReportRedirect'
 
 import 'semantic-ui-css/semantic.min.css'
-import './App.css'
+import './AppGlobal.css'
 
 export function App() {
 	const context = useContext(StoreContext)
@@ -76,7 +76,7 @@ export function App() {
 				/>
 			</div>
 
-			<Container className={styles.content}>
+			<div className={classnames(styles.content, container)}>
 				<ErrorBoundary>
 					<Routes>
 						<Route index={true} element={<Home/>}/>
@@ -90,7 +90,7 @@ export function App() {
 						))}
 					</Routes>
 				</ErrorBoundary>
-			</Container>
+			</div>
 		</div>
 	</>
 }
