@@ -67,3 +67,26 @@ export const AVAILABLE_MODULES: AvailableModules = {
 		// BOSSKEY: importedBossMeta
 	},
 }
+
+export function composeMeta(
+	encounterKey?: EncounterKey,
+	jobKey?: JobKey,
+): Meta {
+	let meta = AVAILABLE_MODULES.CORE
+
+	if (encounterKey != null) {
+		const encounterMeta = AVAILABLE_MODULES.BOSSES[encounterKey]
+		if (encounterMeta != null) {
+			meta = meta.merge(encounterMeta)
+		}
+	}
+
+	if (jobKey != null) {
+		const jobMeta = AVAILABLE_MODULES.JOBS[jobKey]
+		if (jobMeta != null) {
+			meta = meta.merge(jobMeta)
+		}
+	}
+
+	return meta
+}

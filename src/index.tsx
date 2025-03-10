@@ -3,7 +3,7 @@ import 'whatwg-fetch'
 
 import * as Sentry from '@sentry/browser'
 import ReactDOM from 'react-dom'
-import {Root} from './Root'
+import {Site} from './site'
 
 if (!Object.hasOwn(Symbol, 'metadata')) {
 	Object.defineProperty(Symbol, 'metadata', {
@@ -38,7 +38,7 @@ if (NODE_ENV === 'production' && REACT_APP_SENTRY_DSN) {
 	})
 }
 
-ReactDOM.render(<Root />, document.getElementById('root'))
+ReactDOM.render(<Site />, document.getElementById('root'))
 
 // Make sure there isn't a service worker running, it doesn't really work with what we do
 // Code ✂️'d from CRA@2's generated thing
