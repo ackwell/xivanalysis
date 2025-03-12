@@ -1,6 +1,9 @@
+import {getDutyBanner} from "data/ENCOUNTERS"
+import {getPatch} from "data/PATCHES"
 import {useEffect, useMemo, useState} from "react"
 import {Link} from "react-router-dom"
 import {Duty, Pull, Report} from "report"
+import {formatDuration} from "utilities"
 import {LocalStore} from "utilities/localStorage"
 
 const KILLS_ONLY_STORE = new LocalStore<boolean>('xiva.site.kills-only')
@@ -32,24 +35,66 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 
 		{onRefresh != null && <button onClick={() => onRefresh()}>refresh report</button>}
 
-		<ul>
-			{groups.map(group => (
-				<li key={group.pulls[0].id}>
-					{group.duty.name}
+		<h1>{report.name} ed:{report.edition} p:{getPatch(report.edition, report.timestamp/1000)}</h1>
 
-					<ul>
-						{group.pulls.map((pull) => (
-							<li key={pull.id}>
-								<Link to={buildLink(pull)}>
-									{pull.encounter.name} ({pull.progress}%)
+		<div style={{
+			display: 'flex',
+			flexDirection: 'column',
+			gap: 32,
+		}}>
+			{groups.map(group => (
+				<div key={group.pulls[0].id} style={{
+					display: 'flex',
+					gap: 16,
+				}}>
+					<div style={{
+						width: 128,
+						height: 128,
+						overflow: 'hidden',
+						borderRadius: 16,
+					}}>
+						<img src={getDutyBanner(group.duty.id)} style={{
+							marginTop: '-15%',
+							marginLeft: '-15%',
+							width: '130%',
+							height: '130%',
+							objectFit: 'cover',
+						}}/>
+					</div>
+
+					<div style={{
+						display: 'flex',
+						flexDirection: 'column',
+						gap: 16,
+					}}>
+						<h2 style={{margin: 0}}>{group.duty.name}</h2>
+
+						<div style={{
+							display: 'grid',
+							// finger in the air on these ones
+							gridTemplateColumns: 'minmax(auto, 64px) minmax(auto, 256px) repeat(2, minmax(auto, 64px))',
+							gap: '8px 16px',
+						}}>
+							{group.pulls.map((pull) => (
+								<Link key={pull.id} to={buildLink(pull)} style={{display: 'contents'}}>
+									<span>{pullTime(pull.timestamp)}</span>
+									<span>{pull.encounter.name}</span>
+									<span>{formatDuration(pull.duration)}</span>
+									<span>{pull.progress?.toFixed(1)}%</span>
 								</Link>
-							</li>
-						))}
-					</ul>
-				</li>
+							))}
+						</div>
+					</div>
+				</div>
 			))}
-		</ul>
+		</div>
 	</>
+}
+
+// TODO: this should be inlined into the component for individual pulls tbh
+function pullTime(ts: number) {
+	const d = new Date(ts)
+	return d.toLocaleTimeString(undefined, {timeStyle: 'short'})
 }
 
 type PullGroup = {
