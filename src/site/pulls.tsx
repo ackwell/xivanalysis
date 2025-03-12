@@ -40,50 +40,58 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 		<div style={{
 			display: 'flex',
 			flexDirection: 'column',
-			gap: 32,
+			gap: '2rem',
 		}}>
 			{groups.map(group => (
 				<div key={group.pulls[0].id} style={{
-					display: 'flex',
-					gap: 16,
+					display: 'grid',
+					// TODO: mobile will require messing around with the child ranges
+					gridTemplateColumns: 'auto 1fr',
+					gridTemplateRows: 'auto 1fr',
+					gap: '0.5rem 1rem',
 				}}>
 					<div style={{
-						width: 128,
-						height: 128,
+						gridColumn: 1,
+						gridRow: '1 / span 2',
+
+						width: '6rem',
+						height: '6rem',
 						overflow: 'hidden',
-						borderRadius: 16,
+						borderRadius: '1rem',
 					}}>
 						<img src={getDutyBanner(group.duty.id)} style={{
-							marginTop: '-3%',
-							marginLeft: '-3%',
-							width: '106%',
-							height: '106%',
+							marginTop: '-5%',
+							marginLeft: '-5%',
+							width: '110%',
+							height: '110%',
 							objectFit: 'cover',
 						}}/>
 					</div>
 
-					<div style={{
-						display: 'flex',
-						flexDirection: 'column',
-						gap: 16,
+					<h2 style={{
+						gridColumn: 2,
+						gridRow: 1,
 					}}>
-						<h2>{group.duty.name}</h2>
+						{group.duty.name}
+					</h2>
 
-						<div style={{
-							display: 'grid',
-							// finger in the air on these ones
-							gridTemplateColumns: 'minmax(auto, 64px) minmax(auto, 256px) repeat(2, minmax(auto, 64px))',
-							gap: '8px 16px',
-						}}>
-							{group.pulls.map((pull) => (
-								<Link key={pull.id} to={buildLink(pull)} style={{display: 'contents'}}>
-									<span>{pullTime(pull.timestamp)}</span>
-									<span>{pull.encounter.name}</span>
-									<span>{formatDuration(pull.duration)}</span>
-									<span>{pull.progress?.toFixed(1)}%</span>
-								</Link>
-							))}
-						</div>
+					<div style={{
+						gridColumn: 2,
+						gridRow: 2,
+
+						display: 'grid',
+						// finger in the air on these ones
+						gridTemplateColumns: 'minmax(auto, 4rem) minmax(auto, 16rem) repeat(2, minmax(auto, 4rem))',
+						gap: '0.5rem 1rem',
+					}}>
+						{group.pulls.map((pull) => (
+							<Link key={pull.id} to={buildLink(pull)} style={{display: 'contents'}}>
+								<span>{pullTime(pull.timestamp)}</span>
+								<span>{pull.encounter.name}</span>
+								<span>{formatDuration(pull.duration)}</span>
+								<span>{pull.progress?.toFixed(1)}%</span>
+							</Link>
+						))}
 					</div>
 				</div>
 			))}
