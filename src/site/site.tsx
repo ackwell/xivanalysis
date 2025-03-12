@@ -2,6 +2,8 @@ import {StrictMode} from 'react'
 import {createBrowserRouter, Navigate, Outlet,  RouteObject, RouterProvider, useLocation} from 'react-router-dom'
 import {reportSources2} from 'reportSources'
 
+import './global.css'
+
 export const Site = () => (
 	<StrictMode>
 		<RouterProvider router={router}/>

@@ -54,10 +54,10 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 						borderRadius: 16,
 					}}>
 						<img src={getDutyBanner(group.duty.id)} style={{
-							marginTop: '-15%',
-							marginLeft: '-15%',
-							width: '130%',
-							height: '130%',
+							marginTop: '-3%',
+							marginLeft: '-3%',
+							width: '106%',
+							height: '106%',
 							objectFit: 'cover',
 						}}/>
 					</div>
@@ -67,7 +67,7 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 						flexDirection: 'column',
 						gap: 16,
 					}}>
-						<h2 style={{margin: 0}}>{group.duty.name}</h2>
+						<h2>{group.duty.name}</h2>
 
 						<div style={{
 							display: 'grid',
