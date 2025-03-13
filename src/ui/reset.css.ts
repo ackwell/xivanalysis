@@ -1,13 +1,10 @@
 import {globalStyle} from "@vanilla-extract/css"
+import {fixed} from "./metrics"
 
 globalStyle('html', {
-	fontFamily: 'Seravek, \'Gill Sans Nova\', Ubuntu, Calibri, \'DejaVu Sans\', source-sans-pro, sans-serif',
-	fontWeight: 'normal',
-	fontSize: 16,
-})
-
-globalStyle('*', {
-	lineHeight: 'calc(1em + 0.5rem)',
+	// NOTE: This acts as a baseline for `rem` ui-wide. Text should be rendered
+	// with dedicated text components for correct font sizing.
+	fontSize: fixed(1),
 })
 
 globalStyle('*, *::before, *::after', {

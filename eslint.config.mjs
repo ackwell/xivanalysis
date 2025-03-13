@@ -169,4 +169,11 @@ export default pluginTs.config(
 			'@typescript-eslint/no-magic-numbers': 'off',
 		},
 	},
+	// Styling
+	{
+		files: ['src/**/*.css.ts'],
+		rules: {
+			'@typescript-eslint/no-magic-numbers': 'off',
+		},
+	},
 )

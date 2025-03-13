@@ -1,9 +1,8 @@
 import {StrictMode} from 'react'
 import {createBrowserRouter, Navigate, Outlet, RouteObject, RouterProvider, useLocation} from 'react-router-dom'
 import {reportSources2} from 'reportSources'
+import {Text} from 'ui'
 import {container, sidebar} from './site.css'
-
-import './global.css'
 
 export const Site = () => (
 	<StrictMode>
@@ -57,7 +56,7 @@ function Layout() {
 		<div className={container}>
 			{/* TODO: should sidebar be moved to discrete file? */}
 			<aside className={sidebar}>
-				sidebar content
+				<Text>sidebar content</Text>
 
 				{/* for testing */}
 				<div style={{width: '2rem', height: 300, background: 'rgba(255, 0, 0, 0.2)'}}/>

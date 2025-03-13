@@ -1,14 +1,15 @@
 import {style} from "@vanilla-extract/css"
+import {fixed, fluid} from "ui"
 
 export const container = style({
 	display: 'flex',
 	alignItems: 'flex-start',
-	padding: '2rem',
-	gap: '2rem',
+	padding: fixed(4),
+	gap: fixed(4),
 })
 
 export const sidebar = style({
-	width: '16rem',
+	width: fluid(32),
 	border: '1px solid red',
-	borderRadius: '1rem',
+	borderRadius: fixed(2),
 })

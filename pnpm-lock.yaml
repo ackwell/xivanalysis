@@ -23,9 +23,6 @@ importers:
       '@sentry/browser':
         specifier: ^6
         version: 6.4.0
-      '@vanilla-extract/css':
-        specifier: ^1.17.1
-        version: 1.17.1(babel-plugin-macros@3.1.0)
       '@visx/pattern':
         specifier: ^3.12.0
         version: 3.12.0(react@16.14.0)
@@ -156,6 +153,12 @@ importers:
       '@babel/register':
         specifier: ^7.25.9
         version: 7.25.9(@babel/core@7.26.9)
+      '@capsizecss/metrics':
+        specifier: ^3.4.0
+        version: 3.4.0
+      '@capsizecss/vanilla-extract':
+        specifier: ^2.0.0
+        version: 2.0.0(@vanilla-extract/css@1.17.1(babel-plugin-macros@3.1.0))
       '@eslint/js':
         specifier: ^9.19.0
         version: 9.19.0
@@ -246,6 +249,9 @@ importers:
       '@types/webpack-env':
         specifier: ^1.13.6
         version: 1.15.3
+      '@vanilla-extract/css':
+        specifier: ^1.17.1
+        version: 1.17.1(babel-plugin-macros@3.1.0)
       '@vanilla-extract/webpack-plugin':
         specifier: ^2.3.18
         version: 2.3.18(babel-plugin-macros@3.1.0)(webpack@5.75.0)
@@ -1056,6 +1062,17 @@ packages:
 
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+
+  '@capsizecss/core@4.1.2':
+    resolution: {integrity: sha512-5tMjLsVsaEEwJ816y3eTfhhTIyUWNFt58x6YcHni0eV5tta8MGDOAIe+CV5ICb5pguXgDpNGLprqhPqBWtkFSg==}
+
+  '@capsizecss/metrics@3.4.0':
+    resolution: {integrity: sha512-hIn8MAHxLvwyUh6ZvLQHDt2GPShBz6+gxBs1JTD9GleBkht1AZvtCFo0adr7bQvYYuQzUJeKi69zqlAwgKMHNA==}
+
+  '@capsizecss/vanilla-extract@2.0.0':
+    resolution: {integrity: sha512-6FNLEOcAYo2AklxT7XVEm9Yam2hv76DLEhD6RWK3hJ87Nb9i95Y+rdYHJ3LBlbrzb+ZVJXxzZvg5OAZAqr/K3Q==}
+    peerDependencies:
+      '@vanilla-extract/css': ^1.4.0
 
   '@cnakazawa/watch@1.0.4':
     resolution: {integrity: sha512-v9kIhKwjeZThiWrLmj0y17CWoyddASLj9O2yvbZkbvw/N3rWOYy9zkV66ursAoVr0mV15bL8g0c4QZUE6cdDoQ==}
@@ -7579,6 +7596,17 @@ snapshots:
       '@babel/helper-validator-identifier': 7.25.9
 
   '@bcoe/v8-coverage@0.2.3': {}
+
+  '@capsizecss/core@4.1.2':
+    dependencies:
+      csstype: 3.1.3
+
+  '@capsizecss/metrics@3.4.0': {}
+
+  '@capsizecss/vanilla-extract@2.0.0(@vanilla-extract/css@1.17.1(babel-plugin-macros@3.1.0))':
+    dependencies:
+      '@capsizecss/core': 4.1.2
+      '@vanilla-extract/css': 1.17.1(babel-plugin-macros@3.1.0)
 
   '@cnakazawa/watch@1.0.4':
     dependencies:

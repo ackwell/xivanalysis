@@ -3,6 +3,7 @@ import {getPatch} from "data/PATCHES"
 import {useEffect, useMemo, useState} from "react"
 import {Link} from "react-router-dom"
 import {Duty, Pull, Report} from "report"
+import {Text, Title} from "ui"
 import {formatDuration} from "utilities"
 import {LocalStore} from "utilities/localStorage"
 
@@ -35,13 +36,17 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 
 		{onRefresh != null && <button onClick={() => onRefresh()}>refresh report</button>}
 
-		<h1>{report.name} ed:{report.edition} p:{getPatch(report.edition, report.timestamp/1000)}</h1>
-
 		<div style={{
 			display: 'flex',
 			flexDirection: 'column',
 			gap: '2rem',
 		}}>
+			<Title level={1}>
+				{report.name}{' '}
+				ed:{report.edition}{' '}
+				p:{getPatch(report.edition, report.timestamp/1000)}
+			</Title>
+
 			{groups.map(group => (
 				<div key={group.pulls[0].id} style={{
 					display: 'grid',
@@ -68,12 +73,14 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 						}}/>
 					</div>
 
-					<h2 style={{
+					<div style={{
 						gridColumn: 2,
 						gridRow: 1,
 					}}>
-						{group.duty.name}
-					</h2>
+						<Title level={2}>
+							{group.duty.name}
+						</Title>
+					</div>
 
 					<div style={{
 						gridColumn: 2,
@@ -81,15 +88,16 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 
 						display: 'grid',
 						// finger in the air on these ones
-						gridTemplateColumns: 'minmax(auto, 4rem) minmax(auto, 16rem) repeat(2, minmax(auto, 4rem))',
-						gap: '0.5rem 1rem',
+						gridTemplateColumns: 'minmax(auto, 8rem) minmax(auto, 32rem) repeat(2, minmax(auto, 8rem))',
+						gap: '1rem 2rem',
 					}}>
 						{group.pulls.map((pull) => (
+							// TODO: hard requirement to remove this display:contents, it breaks a lot of shit
 							<Link key={pull.id} to={buildLink(pull)} style={{display: 'contents'}}>
-								<span>{pullTime(pull.timestamp)}</span>
-								<span>{pull.encounter.name}</span>
-								<span>{formatDuration(pull.duration)}</span>
-								<span>{pull.progress?.toFixed(1)}%</span>
+								<Text tag="span">{pullTime(pull.timestamp)}</Text>
+								<Text tag="span">{pull.encounter.name}</Text>
+								<Text tag="span">{formatDuration(pull.duration)}</Text>
+								<Text tag="span">{pull.progress?.toFixed(1)}%</Text>
 							</Link>
 						))}
 					</div>
