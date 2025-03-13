@@ -3,9 +3,10 @@ import {getPatch} from "data/PATCHES"
 import {useEffect, useMemo, useState} from "react"
 import {Link} from "react-router-dom"
 import {Duty, Pull, Report} from "report"
-import {Text, Title} from "ui"
+import {Section, Text, Title} from "ui"
 import {formatDuration} from "utilities"
 import {LocalStore} from "utilities/localStorage"
+import * as styles from "./pull.css"
 
 const KILLS_ONLY_STORE = new LocalStore<boolean>('xiva.site.kills-only')
 
@@ -25,6 +26,7 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 	)
 
 	return <>
+		{/* TODO: these might be better placed in a row with the title? not sure */}
 		<label>
 			<input
 				type="checkbox"
@@ -36,11 +38,7 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 
 		{onRefresh != null && <button onClick={() => onRefresh()}>refresh report</button>}
 
-		<div style={{
-			display: 'flex',
-			flexDirection: 'column',
-			gap: '2rem',
-		}}>
+		<div className={styles.stack}>
 			<Title level={1}>
 				{report.name}{' '}
 				ed:{report.edition}{' '}
@@ -48,48 +46,20 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 			</Title>
 
 			{groups.map(group => (
-				<div key={group.pulls[0].id} style={{
-					display: 'grid',
-					// TODO: mobile will require messing around with the child ranges
-					gridTemplateColumns: 'auto 1fr',
-					gridTemplateRows: 'auto 1fr',
-					gap: '0.5rem 1rem',
-				}}>
+				<Section
+					key={group.pulls[0].id}
+					icon={
+						<div className={styles.iconContainer}>
+							<img className={styles.icon} src={getDutyBanner(group.duty.id)}/>
+						</div>
+					}
+					title={<Title level={2}>{group.duty.name}</Title>}
+				>
 					<div style={{
-						gridColumn: 1,
-						gridRow: '1 / span 2',
-
-						width: '6rem',
-						height: '6rem',
-						overflow: 'hidden',
-						borderRadius: '1rem',
-					}}>
-						<img src={getDutyBanner(group.duty.id)} style={{
-							marginTop: '-5%',
-							marginLeft: '-5%',
-							width: '110%',
-							height: '110%',
-							objectFit: 'cover',
-						}}/>
-					</div>
-
-					<div style={{
-						gridColumn: 2,
-						gridRow: 1,
-					}}>
-						<Title level={2}>
-							{group.duty.name}
-						</Title>
-					</div>
-
-					<div style={{
-						gridColumn: 2,
-						gridRow: 2,
-
 						display: 'grid',
 						// finger in the air on these ones
 						gridTemplateColumns: 'minmax(auto, 8rem) minmax(auto, 32rem) repeat(2, minmax(auto, 8rem))',
-						gap: '1rem 2rem',
+						gap: '2rem',
 					}}>
 						{group.pulls.map((pull) => (
 							// TODO: hard requirement to remove this display:contents, it breaks a lot of shit
@@ -101,7 +71,7 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 							</Link>
 						))}
 					</div>
-				</div>
+				</Section>
 			))}
 		</div>
 	</>

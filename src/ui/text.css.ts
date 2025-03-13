@@ -20,7 +20,10 @@ function title(capHeight: number) {
 			lineGap: fixedNumeric(1),
 			fontMetrics: sourceSans3,
 		}),
-		{fontWeight: 'bold'},
+		{
+			fontWeight: 'bold',
+			textWrap: 'balance',
+		},
 	])
 }
 
