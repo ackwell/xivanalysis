@@ -6,8 +6,7 @@ export const section = style({
 	display: 'grid',
 	gridTemplateColumns: `${fluid(6)} 1fr`,
 	gridTemplateRows: 'auto 1fr',
-	columnGap: fixed(1),
-	rowGap: fixed(2),
+	gap: fixed(2),
 	alignItems: 'start',
 
 	'@media': {

@@ -6,10 +6,17 @@ export const container = style({
 	alignItems: 'flex-start',
 	padding: fixed(4),
 	gap: fixed(4),
+	width: '100%',
 })
 
 export const sidebar = style({
 	width: fluid(32),
 	border: '1px solid red',
 	borderRadius: fixed(2),
+	flexShrink: 0,
+})
+
+export const main = style({
+	flexGrow: 1,
+	minWidth: 0,
 })

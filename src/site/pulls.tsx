@@ -26,24 +26,26 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 	)
 
 	return <>
-		{/* TODO: these might be better placed in a row with the title? not sure */}
-		<label>
-			<input
-				type="checkbox"
-				checked={killsOnly}
-				onChange={event => setKillsOnly(event.target.checked)}
-			/>
-			kills only
-		</label>
-
-		{onRefresh != null && <button onClick={() => onRefresh()}>refresh report</button>}
-
 		<div className={styles.stack}>
 			<Title level={1}>
 				{report.name}{' '}
 				ed:{report.edition}{' '}
 				p:{getPatch(report.edition, report.timestamp/1000)}
 			</Title>
+
+			{/* TODO: these might be better placed in a row with the title? not sure */}
+			<div>
+				<label>
+					<input
+						type="checkbox"
+						checked={killsOnly}
+						onChange={event => setKillsOnly(event.target.checked)}
+					/>
+					kills only
+				</label>
+
+				{onRefresh != null && <button onClick={() => onRefresh()}>refresh report</button>}
+			</div>
 
 			{groups.map(group => (
 				<Section
@@ -55,15 +57,9 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 					}
 					title={<Title level={2}>{group.duty.name}</Title>}
 				>
-					<div style={{
-						display: 'grid',
-						// finger in the air on these ones
-						gridTemplateColumns: 'minmax(auto, 8rem) minmax(auto, 32rem) repeat(2, minmax(auto, 8rem))',
-						gap: '2rem',
-					}}>
+					<div className={styles.table}>
 						{group.pulls.map((pull) => (
-							// TODO: hard requirement to remove this display:contents, it breaks a lot of shit
-							<Link key={pull.id} to={buildLink(pull)} style={{display: 'contents'}}>
+							<Link key={pull.id} to={buildLink(pull)} className={styles.link}>
 								<Text tag="span">{pullTime(pull.timestamp)}</Text>
 								<Text tag="span">{pull.encounter.name}</Text>
 								<Text tag="span">{formatDuration(pull.duration)}</Text>
