@@ -1,14 +1,22 @@
+import {GameEdition} from "data/EDITIONS"
 import {getDutyBanner} from "data/ENCOUNTERS"
 import {getPatch} from "data/PATCHES"
 import {useEffect, useMemo, useState} from "react"
 import {Link} from "react-router-dom"
 import {Duty, Pull, Report} from "report"
-import {Section, Text, Title} from "ui"
+import {IconGlobe, Section, Text, Title} from "ui"
 import {formatDuration} from "utilities"
 import {LocalStore} from "utilities/localStorage"
 import * as styles from "./pull.css"
 
 const KILLS_ONLY_STORE = new LocalStore<boolean>('xiva.site.kills-only')
+
+const EDITION_NAME = {
+	// Size should inherit from font somehow?
+	[GameEdition.GLOBAL]: <IconGlobe/>,
+	[GameEdition.KOREAN]: 'KR',
+	[GameEdition.CHINESE]: 'CN',
+}
 
 export type PullsProps = {
 	report: Report,
@@ -25,12 +33,11 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 		[report.pulls, killsOnly]
 	)
 
-	return <>
+	return (
 		<div className={styles.stack}>
 			<Title level={1}>
 				{report.name}{' '}
-				ed:{report.edition}{' '}
-				p:{getPatch(report.edition, report.timestamp/1000)}
+				{EDITION_NAME[report.edition]}{getPatch(report.edition, report.timestamp/1000)}
 			</Title>
 
 			{/* TODO: these might be better placed in a row with the title? not sure */}
@@ -70,7 +77,7 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 				</Section>
 			))}
 		</div>
-	</>
+	)
 }
 
 // TODO: this should be inlined into the component for individual pulls tbh
