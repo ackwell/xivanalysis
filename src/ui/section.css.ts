@@ -1,17 +1,16 @@
 import {style} from "@vanilla-extract/css"
 import {BREAKPOINT, fixed, fluid} from "./metrics"
 
-// TODO: mobile
 export const section = style({
 	display: 'grid',
-	gridTemplateColumns: `${fluid(6)} 1fr`,
+	gridTemplateColumns: `${fluid(6)} minmax(0, 1fr)`,
 	gridTemplateRows: 'auto 1fr',
 	gap: fixed(2),
 	alignItems: 'start',
 
 	'@media': {
 		[BREAKPOINT.MD]: {
-			gridTemplateColumns: `${fluid(12)} 1fr`,
+			gridTemplateColumns: `${fluid(12)} minmax(0, 1fr)`,
 		},
 	},
 })

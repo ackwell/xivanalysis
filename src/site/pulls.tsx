@@ -12,8 +12,8 @@ import * as styles from "./pull.css"
 const KILLS_ONLY_STORE = new LocalStore<boolean>('xiva.site.kills-only')
 
 const EDITION_NAME = {
-	// Size should inherit from font somehow?
-	[GameEdition.GLOBAL]: <IconGlobe/>,
+	// TODO: better text for kr/cn? icons?
+	[GameEdition.GLOBAL]: <IconGlobe alt="global"/>,
 	[GameEdition.KOREAN]: 'KR',
 	[GameEdition.CHINESE]: 'CN',
 }
@@ -37,10 +37,11 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 		<div className={styles.stack}>
 			<Title level={1}>
 				{report.name}{' '}
-				{EDITION_NAME[report.edition]}{getPatch(report.edition, report.timestamp/1000)}
+				<span className={styles.meta}>
+					{EDITION_NAME[report.edition]}{getPatch(report.edition, report.timestamp/1000)}
+				</span>
 			</Title>
 
-			{/* TODO: these might be better placed in a row with the title? not sure */}
 			<div>
 				<label>
 					<input
@@ -65,13 +66,8 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 					title={<Title level={2}>{group.duty.name}</Title>}
 				>
 					<div className={styles.table}>
-						{group.pulls.map((pull) => (
-							<Link key={pull.id} to={buildLink(pull)} className={styles.link}>
-								<Text tag="span">{pullTime(pull.timestamp)}</Text>
-								<Text tag="span">{pull.encounter.name}</Text>
-								<Text tag="span">{formatDuration(pull.duration)}</Text>
-								<Text tag="span">{pull.progress?.toFixed(1)}%</Text>
-							</Link>
+						{group.pulls.map(pull => (
+							<PullRow key={pull.id} pull={pull} buildLink={buildLink}/>
 						))}
 					</div>
 				</Section>
@@ -80,10 +76,30 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 	)
 }
 
-// TODO: this should be inlined into the component for individual pulls tbh
-function pullTime(ts: number) {
-	const d = new Date(ts)
-	return d.toLocaleTimeString(undefined, {timeStyle: 'short'})
+type PullProps = {
+	pull: Pull,
+	buildLink: (pull: Pull) => string,
+}
+
+function PullRow({pull, buildLink}: PullProps) {
+	const pullTime = new Date(pull.timestamp)
+		.toLocaleTimeString(undefined, {timeStyle: 'short'})
+
+	const progress = pull.progress ?? 0
+
+	return (
+		<Link to={buildLink(pull)} className={styles.link}>
+			<Text tag="span">{pullTime}</Text>
+			<Text tag="span">{formatDuration(pull.duration)}</Text>
+			<span className={styles.meter}>
+				<span className={styles.meterBar} style={{
+					width: `${progress}%`,
+					background: progress >= 100 ? 'green' : 'red',
+				}}/>
+			</span>
+			<Text tag="span">{pull.encounter.name}</Text>
+		</Link>
+	)
 }
 
 type PullGroup = {

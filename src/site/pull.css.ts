@@ -8,7 +8,6 @@ export const stack = style({
 	gap: fixed(4),
 })
 
-// TODO: height == width, width 100%, move width spec to section
 export const iconContainer = style({
 	width: '100%',
 	aspectRatio: '1',
@@ -31,9 +30,14 @@ export const icon = style({
 	objectFit: 'cover',
 })
 
+export const meta = style({
+	// TODO: use themed color
+	opacity: 0.5,
+})
+
 // We reuse this in both the table and links so that UAs that don't support
 // subgrid can at least approximate the layout.
-const tableLayout = `minmax(max-content, ${fluid(8)}) 1fr repeat(2, min-content)`
+const tableLayout = `repeat(3, max-content) minmax(${fluid(20)}, max-content)`
 
 // Links have a padding affordance that we need to reverse at the table
 // container level.
@@ -44,9 +48,10 @@ export const table = style({
 	display: 'grid',
 	gridTemplateColumns: tableLayout,
 	columnGap: fluid(2),
+	rowGap: fixed(0.5),
 
 	// TODO: reuse this across general "content" in some manner
-	width: `calc(min(100%, ${fluid(100)}) + 2 * ${linkPadding})`,
+	maxWidth: `calc(100% + 2*${linkPadding})`,
 
 	margin: `-${linkPadding}`,
 })
@@ -62,6 +67,8 @@ export const link = style({
 	padding: linkPadding,
 	borderRadius: fixed(1),
 
+	// TODO: theeeeeeeeeeeeeme
+	color: 'black',
 	textDecoration: 'none',
 
 	selectors: {
@@ -74,4 +81,21 @@ export const link = style({
 			background: 'rgba(0, 255, 0, 0.2)',
 		},
 	},
+})
+
+export const meter = style({
+	display: 'inline-block',
+	height: '100%',
+	width: fluid(5),
+	borderRadius: fixed(0.5),
+	overflow: 'hidden',
+	background: 'lightgrey',
+
+	fontSize: 0,
+	lineHeight: 0,
+})
+
+export const meterBar = style({
+	display: 'inline-block',
+	height: '100%',
 })
