@@ -4,10 +4,10 @@ import {getPatch} from "data/PATCHES"
 import {useEffect, useMemo, useState} from "react"
 import {Link} from "react-router-dom"
 import {Duty, Pull, Report} from "report"
-import {IconGlobe, Section, Text, Title} from "ui"
+import {Button, IconGlobe, IconRefresh, Section, Text, Title} from "ui"
 import {formatDuration} from "utilities"
 import {LocalStore} from "utilities/localStorage"
-import * as styles from "./pull.css"
+import * as styles from "./pulls.css"
 
 const KILLS_ONLY_STORE = new LocalStore<boolean>('xiva.site.kills-only')
 
@@ -35,24 +35,44 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 
 	return (
 		<div className={styles.stack}>
-			<Title level={1}>
-				{report.name}{' '}
-				<span className={styles.meta}>
-					{EDITION_NAME[report.edition]}{getPatch(report.edition, report.timestamp/1000)}
-				</span>
-			</Title>
+			<div className={styles.header}>
+				<div style={{flexShrink: 1, minWidth: 0}}>
+					<Title level={1}>
+						{report.name}{' '}
+						<span className={styles.meta}>
+							{EDITION_NAME[report.edition]}{getPatch(report.edition, report.timestamp/1000)}
+						</span>
+					</Title>
+				</div>
 
-			<div>
-				<label>
+				{onRefresh != null && (
+					// TODO: this is pretty chonky - old ui has an un-outlined button - thoughts?
+					<Button onClick={onRefresh}>
+					 	{/* TODO: alt aria hidden alternative? */}
+					 	<IconRefresh size={1.5} alt="Refresh"/>
+						Refresh
+					</Button>
+				)}
+
+				{/* TODO: work out styling for this */}
+				<label style={{
+					display: 'flex',
+					flexDirection: 'row',
+					alignItems: 'center',
+					gap: 8,
+				}}>
 					<input
 						type="checkbox"
 						checked={killsOnly}
 						onChange={event => setKillsOnly(event.target.checked)}
+						style={{
+							width: '15px',
+							height: '15px',
+						}}
 					/>
-					kills only
+					{/* TODO: this should be implicit */}
+					<Text tag="span">Kills only</Text>
 				</label>
-
-				{onRefresh != null && <button onClick={() => onRefresh()}>refresh report</button>}
 			</div>
 
 			{groups.map(group => (
@@ -89,6 +109,7 @@ function PullRow({pull, buildLink}: PullProps) {
 
 	return (
 		<Link to={buildLink(pull)} className={styles.link}>
+			{/* TODO: consider dropping the tone of the time/duration */}
 			<Text tag="span">{pullTime}</Text>
 			<Text tag="span">{formatDuration(pull.duration)}</Text>
 			<span className={styles.meter}>

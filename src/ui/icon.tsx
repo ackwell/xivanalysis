@@ -1,8 +1,9 @@
-import {GlobeIcon, LucideIcon} from "lucide-react"
+import {GlobeIcon, LucideIcon, RefreshCwIcon} from "lucide-react"
 import React from "react"
 import {relative} from "./metrics"
 
 export const IconGlobe = wrapIcon(GlobeIcon)
+export const IconRefresh = wrapIcon(RefreshCwIcon)
 
 export type IconProps = {
 	size?: number

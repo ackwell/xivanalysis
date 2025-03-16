@@ -14,6 +14,8 @@ export const sidebar = style({
 	border: '1px solid red',
 	borderRadius: fixed(2),
 	flexShrink: 0,
+
+	background: 'white',
 })
 
 export const main = style({
