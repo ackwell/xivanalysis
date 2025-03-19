@@ -15,11 +15,6 @@ export const header = style({
 	flexWrap: 'wrap',
 	alignItems: 'center',
 	gap: fixed(2),
-
-	// TODO: share with sections
-	background: 'white',
-	padding: fixed(2),
-	borderRadius: fixed(2),
 })
 
 export const iconContainer = style({

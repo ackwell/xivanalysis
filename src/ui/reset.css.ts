@@ -3,7 +3,6 @@ import {fixed} from "./metrics"
 
 // TODO: set up postcss pipeline for v-e once nuking old css. or something.
 
-// Resets
 globalStyle('html', {
 	// NOTE: This acts as a baseline for `rem` ui-wide. Text should be rendered
 	// with dedicated text components for correct font sizing.
@@ -27,8 +26,3 @@ globalStyle('p, h1, h2, h3, h4, h5, h6', {
 })
 
 // TODO: text wrap overrides?
-
-// Base page
-globalStyle('body', {
-	background: '#eee',
-})

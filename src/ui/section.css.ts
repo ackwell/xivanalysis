@@ -8,10 +8,6 @@ export const section = style({
 	gap: fixed(2),
 	alignItems: 'start',
 
-	padding: fixed(2),
-	borderRadius: fixed(2),
-	background: 'white',
-
 	'@media': {
 		[BREAKPOINT.MD]: {
 			gridTemplateColumns: `${fluid(12)} minmax(0, 1fr)`,

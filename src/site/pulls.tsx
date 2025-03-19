@@ -4,7 +4,7 @@ import {getPatch} from "data/PATCHES"
 import {useEffect, useMemo, useState} from "react"
 import {Link} from "react-router-dom"
 import {Duty, Pull, Report} from "report"
-import {Button, IconGlobe, IconRefresh, Section, Text, Title} from "ui"
+import {Button, IconGlobe, IconRefresh, Section, Surface, Text, Title} from "ui"
 import {formatDuration} from "utilities"
 import {LocalStore} from "utilities/localStorage"
 import * as styles from "./pulls.css"
@@ -35,45 +35,48 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 
 	return (
 		<div className={styles.stack}>
-			<div className={styles.header}>
-				<div style={{flexShrink: 1, minWidth: 0}}>
-					<Title level={1}>
-						{report.name}{' '}
-						<span className={styles.meta}>
-							{EDITION_NAME[report.edition]}{getPatch(report.edition, report.timestamp/1000)}
-						</span>
-					</Title>
-				</div>
+			<Surface>
+				<div className={styles.header}>
+					{/* TODO: what are these styles lmao. Fix that up. */}
+					<div style={{flexShrink: 1, minWidth: 0}}>
+						<Title level={1}>
+							{report.name}{' '}
+							<span className={styles.meta}>
+								{EDITION_NAME[report.edition]}{getPatch(report.edition, report.timestamp/1000)}
+							</span>
+						</Title>
+					</div>
 
-				{onRefresh != null && (
+					{onRefresh != null && (
 					// TODO: this is pretty chonky - old ui has an un-outlined button - thoughts?
-					<Button onClick={onRefresh}>
+						<Button onClick={onRefresh}>
 					 	{/* TODO: alt aria hidden alternative? */}
 					 	<IconRefresh size={1.5} alt="Refresh"/>
 						Refresh
-					</Button>
-				)}
+						</Button>
+					)}
 
-				{/* TODO: work out styling for this */}
-				<label style={{
-					display: 'flex',
-					flexDirection: 'row',
-					alignItems: 'center',
-					gap: 8,
-				}}>
-					<input
-						type="checkbox"
-						checked={killsOnly}
-						onChange={event => setKillsOnly(event.target.checked)}
-						style={{
-							width: '15px',
-							height: '15px',
-						}}
-					/>
-					{/* TODO: this should be implicit */}
-					<Text tag="span">Kills only</Text>
-				</label>
-			</div>
+					{/* TODO: work out styling for this */}
+					<label style={{
+						display: 'flex',
+						flexDirection: 'row',
+						alignItems: 'center',
+						gap: 8,
+					}}>
+						<input
+							type="checkbox"
+							checked={killsOnly}
+							onChange={event => setKillsOnly(event.target.checked)}
+							style={{
+								width: '15px',
+								height: '15px',
+							}}
+						/>
+						{/* TODO: this should be implicit */}
+						<Text tag="span">Kills only</Text>
+					</label>
+				</div>
+			</Surface>
 
 			{groups.map(group => (
 				<Section
