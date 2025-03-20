@@ -1,11 +1,12 @@
 import {style} from "@vanilla-extract/css"
-import {BREAKPOINT, fixed, fluid} from "./metrics"
+import {BREAKPOINT, fluid} from "./metrics"
+import {gap} from "./surface"
 
 export const section = style({
 	display: 'grid',
 	gridTemplateColumns: `${fluid(6)} minmax(0, 1fr)`,
 	gridTemplateRows: 'auto 1fr',
-	gap: fixed(2),
+	gap,
 	alignItems: 'start',
 
 	'@media': {

@@ -4,7 +4,7 @@ import {composeMeta} from "parser/AVAILABLE_MODULES"
 import {useMemo} from "react"
 import {Link} from "react-router-dom"
 import {Actor, Pull, Report} from "report"
-import {Section, Surface, Title} from "ui"
+import {Section, Stack, Surface, Title} from "ui"
 import {formatDuration} from "utilities"
 
 export type ActorsProps =
@@ -33,33 +33,35 @@ function ActorsImpl({report, pull, buildLink}: ActorsImplProps) {
 		[pull, report],
 	)
 
-	return <>
-		<Surface>
-			<Title level={1}>
-				{/* TODO: should i include duty name? Old doesn't */}
-				{pull.encounter.name}{' '}
+	return (
+		<Stack>
+			<Surface>
+				<Title level={1}>
+					{/* TODO: should i include duty name? Old doesn't */}
+					{pull.encounter.name}{' '}
 				({formatDuration(pull.duration)})
-			</Title>
-		</Surface>
+				</Title>
+			</Surface>
 
-		{groups.map(({role, actors}) => (
-			<Section
-				key={role.id}
-				// TODO: this needs to use the i18n stuff
-				title={<Title level={2}>{role.name.id}</Title>}
-			>
-				<ul>
-					{actors.map(actor => (
-						<li key={actor.id}>
-							<Link to={buildLink(actor)}>
-								{actor.job} {actor.name}
-							</Link>
-						</li>
-					))}
-				</ul>
-			</Section>
-		))}
-	</>
+			{groups.map(({role, actors}) => (
+				<Section
+					key={role.id}
+					// TODO: this needs to use the i18n stuff
+					title={<Title level={2}>{role.name.id}</Title>}
+				>
+					<ul>
+						{actors.map(actor => (
+							<li key={actor.id}>
+								<Link to={buildLink(actor)}>
+									{actor.job} {actor.name}
+								</Link>
+							</li>
+						))}
+					</ul>
+				</Section>
+			))}
+		</Stack>
+	)
 }
 
 type ActorGroup = {

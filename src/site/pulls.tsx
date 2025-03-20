@@ -4,7 +4,7 @@ import {getPatch} from "data/PATCHES"
 import {useEffect, useMemo, useState} from "react"
 import {Link} from "react-router-dom"
 import {Duty, Pull, Report} from "report"
-import {Button, IconGlobe, IconRefresh, Section, Surface, Text, Title} from "ui"
+import {Button, IconGlobe, IconRefresh, Section, Stack, Surface, Text, Title} from "ui"
 import {formatDuration} from "utilities"
 import {LocalStore} from "utilities/localStorage"
 import * as styles from "./pulls.css"
@@ -34,7 +34,7 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 	)
 
 	return (
-		<div className={styles.stack}>
+		<Stack>
 			<Surface>
 				<div className={styles.header}>
 					{/* TODO: what are these styles lmao. Fix that up. */}
@@ -50,9 +50,9 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 					{onRefresh != null && (
 					// TODO: this is pretty chonky - old ui has an un-outlined button - thoughts?
 						<Button onClick={onRefresh}>
-					 	{/* TODO: alt aria hidden alternative? */}
-					 	<IconRefresh size={1.5} alt="Refresh"/>
-						Refresh
+							{/* TODO: alt aria hidden alternative? */}
+							<IconRefresh size={1.5} alt="Refresh"/>
+							Refresh
 						</Button>
 					)}
 
@@ -95,7 +95,7 @@ export function Pulls({report, buildLink, onRefresh}: PullsProps) {
 					</div>
 				</Section>
 			))}
-		</div>
+		</Stack>
 	)
 }
 

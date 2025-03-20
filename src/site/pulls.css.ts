@@ -1,13 +1,6 @@
 import {style} from "@vanilla-extract/css"
 import {BREAKPOINT, fixed, fluid} from "ui"
 
-// TODO: layout components?
-export const stack = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: fixed(4),
-})
-
 export const header = style({
 	display: 'flex',
 	flexDirection: 'row',

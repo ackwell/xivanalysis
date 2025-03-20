@@ -1,11 +1,12 @@
 import {style} from "@vanilla-extract/css"
-import {fixed, fluid} from "ui"
+import {fixed, fluid, gap} from "ui"
 
 export const container = style({
 	display: 'flex',
 	alignItems: 'flex-start',
-	padding: fixed(4),
-	gap: fixed(4),
+	// TODO: would be neat to get this into a layout so these can be internal to ui
+	padding: gap,
+	gap,
 	width: '100%',
 })
 
