@@ -7,6 +7,26 @@ export function ensureArray<T>(val: T | readonly T[]): readonly T[] {
 	return val // need to add a .slice() here if we want the return to be T[]
 }
 
+/**
+ * Error type that is impossible to construct.
+ *
+ * Useful to enforce exhaustive logic, as any unhandled union members will
+ * result in a non-never type that fails to check.
+ *
+ * @example
+ * const value: 'a' | 'b' = ...
+ * switch (value) {
+ * case 'a': ...
+ * default: throw new UnreachableError(value)
+ * // Argument of type '"b"' is not assignable to parameter of type 'never'
+ * }
+ */
+export class UnreachableError extends Error {
+	constructor(value: never) {
+		super(`unreachable value ${value} received`)
+	}
+}
+
 type SortaEnum = Record<string|number, string|number>
 /**
  * Create reverse key<->value mappings for an object and then freeze it to prevent further modifications.

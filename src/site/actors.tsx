@@ -1,11 +1,25 @@
+import Color from "color"
 import {JobKey, JOBS, Role, RoleKey, ROLES} from "data/JOBS"
 import {patchSupported} from "data/PATCHES"
 import {composeMeta} from "parser/AVAILABLE_MODULES"
-import {useMemo} from "react"
+import {ReactElement, useMemo} from "react"
 import {Link} from "react-router-dom"
 import {Actor, Pull, Report} from "report"
-import {Section, Stack, Surface, Title} from "ui"
+import {IconHealer, IconMagicalRanged, IconMelee, IconOutdated, IconPhysicalRanged, IconSize, IconTank, Section, Stack, Surface, Text, Title} from "ui"
 import {formatDuration} from "utilities"
+import * as styles from './actors.css'
+
+// TODO: this would probably benefit from being shared, along with job icons when i set those up
+const ROLE_ICON_SIZE: IconSize = {unit: 'fixed', multiplier: 8}
+const ROLE_ICON: Record<RoleKey, ReactElement> = {
+	TANK: <IconTank size={ROLE_ICON_SIZE}/>,
+	HEALER: <IconHealer size={ROLE_ICON_SIZE}/>,
+	MELEE: <IconMelee size={ROLE_ICON_SIZE}/>,
+	PHYSICAL_RANGED: <IconPhysicalRanged size={ROLE_ICON_SIZE}/>,
+	MAGICAL_RANGED: <IconMagicalRanged size={ROLE_ICON_SIZE}/>,
+	OUTDATED: <IconOutdated size={ROLE_ICON_SIZE}/>,
+	UNSUPPORTED: <IconOutdated size={ROLE_ICON_SIZE}/>,
+}
 
 export type ActorsProps =
 	& Omit<ActorsImplProps, 'pull'>
@@ -43,9 +57,21 @@ function ActorsImpl({report, pull, buildLink}: ActorsImplProps) {
 				</Title>
 			</Surface>
 
-			{groups.map(({role, actors}) => (
+			{groups.map(({roleKey, role, actors}) => (
 				<Section
 					key={role.id}
+					icon={
+						<div
+							className={styles.iconContainer}
+							style={{
+								// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+								backgroundColor: Color(role.colour).alpha(0.2).string(),
+								color: role.colour,
+							}}
+						>
+							{ROLE_ICON[roleKey]}
+						</div>
+					}
 					// TODO: this needs to use the i18n stuff
 					title={<Title level={2}>{role.name.id}</Title>}
 				>
@@ -53,7 +79,8 @@ function ActorsImpl({report, pull, buildLink}: ActorsImplProps) {
 						{actors.map(actor => (
 							<li key={actor.id}>
 								<Link to={buildLink(actor)}>
-									{actor.job} {actor.name}
+									<Text tag="span">{actor.job}</Text>
+									<Text tag="span">{actor.name}</Text>
 								</Link>
 							</li>
 						))}
@@ -65,6 +92,7 @@ function ActorsImpl({report, pull, buildLink}: ActorsImplProps) {
 }
 
 type ActorGroup = {
+	roleKey: RoleKey,
 	role: Role,
 	actors: Actor[]
 }
@@ -88,7 +116,7 @@ function groupActors(
 	}
 
 	return [...groups.entries()]
-		.map(([role, actors]) => ({role: ROLES[role], actors}))
+		.map(([role, actors]) => ({roleKey: role, role: ROLES[role], actors}))
 		.sort((a, b) => a.role.id - b.role.id)
 }
 

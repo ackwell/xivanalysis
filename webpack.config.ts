@@ -216,6 +216,7 @@ export default (env: Environment, {
 			// Images
 			{
 				test: /\.(ico|png|jpg|jpeg|gif|svg|webp)(\?v=\d+\.\d+\.\d+)?$/,
+				exclude: /\.inline.svg$/,
 				type: 'asset',
 				parser: {
 					dataUrlCondition: {
@@ -225,6 +226,11 @@ export default (env: Environment, {
 				generator: {
 					filename: 'assets/[name].[hash:8].[ext]',
 				},
+			},
+			{
+				test: /\.inline.svg$/,
+				issuer: /\.[tj]sx?$/,
+				use: '@svgr/webpack',
 			},
 		],
 	},

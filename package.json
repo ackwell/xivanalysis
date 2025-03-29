@@ -88,6 +88,7 @@
     "@lingui/cli": "^2",
     "@lingui/loader": "^2.5.0",
     "@lingui/macro": "^2.7.4",
+    "@svgr/webpack": "^8.1.0",
     "@teamsupercell/typings-for-css-modules-loader": "^2.4.0",
     "@types/chart.js": "^2.7.37",
     "@types/classnames": "^2.2.6",

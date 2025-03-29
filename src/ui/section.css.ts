@@ -11,7 +11,7 @@ export const section = style({
 
 	'@media': {
 		[BREAKPOINT.MD]: {
-			gridTemplateColumns: `${fluid(12)} minmax(0, 1fr)`,
+			gridTemplateColumns: `${fluid(10)} minmax(0, 1fr)`,
 		},
 	},
 })
